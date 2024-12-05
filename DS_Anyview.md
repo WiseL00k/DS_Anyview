@@ -1290,6 +1290,113 @@ Status isLeagalDuCirLinkList(DuCirLinkList L)
 }
 ```
 
+## 第3章
+
+### DC03PE01
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int conflictsOfInsertSort(RcdSqList* L)
+{ 
+    int result = 0;
+    int i, j;
+    for (i = 1; i < L->length; ++i)
+    {
+        if (L->rcd[i + 1].key < L->rcd[i].key)
+        { 
+            L->rcd[0] = L->rcd[i + 1];
+            j = i + 1;
+            do {
+                j--;
+                L->rcd[j + 1] = L->rcd[j];
+                ++result;
+            } while (L->rcd[0].key < L->rcd[j - 1].key); 
+            L->rcd[j] = L->rcd[0];
+        }
+    }
+    return result;
+}
+```
+
+### DC03PE03
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void InsertSort(RcdSqList &L)
+{ // Add your code here
+    int i,j;
+    for (i = 1; i < L.length; ++i) {
+        if (L.rcd[i+1].key < L.rcd[i].key) {
+            L.rcd[L.length+1].key = L.rcd[i+1].key;
+            j = i+1;
+            do
+            {
+                j--;
+                L.rcd[j+1].key = L.rcd[j].key;
+            }while(L.rcd[L.length+1].key < L.rcd[j-1].key); 
+            L.rcd[j].key = L.rcd[L.length+1].key;
+        }
+    }
+}
+```
+
+### DC03PE06
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void BubbleSort(RcdSqList2 &L) 
+{ // Add your code here
+    int change = L.length,temp_change = L.length;
+    int j;
+    for (int i = 1; i <= L.length; i++) {
+        for (j = 1; j < change; j++) {
+            if(GT(L.rcd[j],L.rcd[j+1]))
+            {
+                Swap(L.rcd[j],L.rcd[j+1]);
+                temp_change = j;
+            }
+        }
+        if(change == temp_change)
+        {
+            break;
+        }
+        change = temp_change;
+    }
+
+}
+```
+
+### DC03PE23
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void CountSort(RcdSqList2 &L)  
+{ // Add your code here
+    int c[MAXSIZE+1] = {0};
+    KeyType a[MAXSIZE+1] = {0};     //保留初始序列，辅助后期对序列进行重新排列
+    for (int i = 1; i <= L.length; ++i) {
+        a[i] = L.rcd[i].key;
+    }
+    for (int i = 1; i <= L.length; ++i) {
+        for(int j = 1; j <= L.length; ++j)
+        {
+            if (L.rcd[j].key < a[i]) {
+                ++c[i];
+            }
+        }
+    }
+    for (int i = 0; i < L.length; ++i) {
+        for(int j = 1; j <= L.length; ++j)
+        {
+            if (c[j] == i) {
+                L.rcd[i+1].key = a[j];
+                break;
+            }
+        }
+    }
+}
+```
+
 
 
 ## 未完待续...

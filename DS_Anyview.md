@@ -1397,6 +1397,111 @@ void CountSort(RcdSqList2 &L)
 }
 ```
 
+## 第4章
+
+### DC04PE04
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void PrintKeys(HashTable ht, void(*print)(StrKeyType)){
+/* 请调用形参中的print函数输出关键字 */
+    for (char letter = 'A'; letter <= 'Z'; letter++) {
+        int i = (letter-'A')%ht.size;
+        while(ht.rcd[i].tag != 0)       //没到空，就线性往下搜索
+        {
+            if (ht.rcd[i].tag == 1 && ht.rcd[i].key[0] == letter) { //必须为有效位且第一位是该字母才输出
+                print(ht.rcd[i].key);
+            }
+            i = (i+1)%ht.size;
+        }
+    }
+}
+
+```
+
+### DC04PE15
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int BuildHashTab(ChainHashTab &H, int n, HKeyType es[])
+{  // Add your code here
+    H.count = 0;
+    bool isRepeat = FALSE;
+    for (int i = 0; i < n; i++) {
+        isRepeat = FALSE;
+        HLink q = H.rcd[Hash(H,es[i])];
+        HLink p = (HLink)malloc(sizeof(struct HNode));
+        p->data = es[i];
+        p->next = NULL;
+        if (H.rcd[Hash(H,es[i])]) {
+            do{
+                if(q->data == es[i])
+                {
+                    isRepeat = TRUE;
+                    break;
+                }
+            }while (Collision(H,q));
+            if(isRepeat)
+            {
+                free(p);
+                continue;
+            }
+            p->next = H.rcd[Hash(H,es[i])];
+            H.rcd[Hash(H,es[i])] = p;
+        }
+        else {
+            H.rcd[Hash(H,es[i])] = p;
+        }
+        H.count++;
+    }
+}
+```
+
+### DC04PE30
+
+```c++
+#include "allinclude.h"
+int countConflics(LHashTable H)
+{
+	int confilcsTimes = 0;
+	for(int i = 0; i < H.size; ++i)
+	{
+		Node* p = H.rcd[i];
+		if (p) {
+			while (p) {
+				++confilcsTimes;
+				p = p->next;
+			}
+			--confilcsTimes;
+		}
+	}
+	return confilcsTimes;
+}
+```
+
+### DC04PE35
+
+```c++
+#include "allinclude.h"
+Node* searchLHash(LHashTable H, KeyType key, int &c)
+{
+	Node* p = H.rcd[H.hash(key,H.size)];
+	c = 0;
+	if (p) {
+		while (p) {
+			if (p->r.key == key) {
+				return p;
+			}
+			++c;
+			p = p->next;
+		}
+		--c;
+		return NULL;
+	}
+	return NULL;
+}
+```
+
 
 
 ## 未完待续...

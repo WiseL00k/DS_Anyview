@@ -1502,6 +1502,258 @@ Node* searchLHash(LHashTable H, KeyType key, int &c)
 }
 ```
 
+## 第5章
+
+### DC05PE04
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int G(int m, int n) 
+{  // Add your code here
+    if (m == 0 && n >= 0) {
+        return 0;
+    }
+    else if (m > 0 && n >= 0) {
+        return G(m-1,2*n)+n;
+    }
+    else {
+        return -1;
+    }
+}
+```
+
+### DC05PE05
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int F(int n) 
+{ // Add your code here
+    if(n == 0)
+    {
+        return 1;
+    }
+    else if (n > 0) {
+        return n*F(n/2);
+    }
+    else {
+        return -1;
+    }
+}
+```
+
+### DC05PE06
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+float Sqrt(float A, float p, float e) 
+{  // Add your code here
+    if(abs(p*p-A) < e)
+    {
+        return p;
+    }
+    else{
+        return Sqrt(A,(p+A/p)/2,e);
+    }
+}
+```
+
+### DC05PE07
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int Akm(int m, int n) 
+{  // Add your code here
+    if(m < 0 || n < 0)
+    {
+        return -1;
+    }
+    else if (m != 0 && n == 0) 
+    {
+            return Akm(m-1,1);        
+
+    }
+    else if (m != 0 && n != 0) 
+    {
+        return Akm(m-1,Akm(m,n-1));
+    }
+    else
+    {
+        return n+1;
+    }
+}
+```
+
+### DC05PE15
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int F(int n) 
+{ // Add your code here
+    int rlt = 1;
+    if (n < 0) {
+        rlt = -1;
+    }
+    else {
+        for(int i = n; i > 0; i/=2)
+        {
+            rlt *= i;
+        }
+    }
+    return rlt;
+}
+```
+
+### DC05PE16
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+float Sqrt(float A, float p, float e) 
+{  // Add your code here
+    while (abs(p*p-A) >= e) {
+        p = (p+A/p)/2;
+    }
+    return p;
+}
+```
+
+### DC05PE20
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void ChangeColor(GTYPE g, int m, int n, char c, int i0, int j0) 
+{  // Add your code here
+    // static char k;   ???  why Not ???
+    // if(i0 <= 0 || j0 <= 0 || i0 >= m+1 || j0 >= n+1 || g[i0][j0] != k)
+    // {
+    //     return;
+    // }
+    // else {
+    //     g[i0][j0] = c;
+    //     ChangeColor(g,m,n,c,i0+1,j0);
+    //     ChangeColor(g,m,n,c,i0-1,j0);
+    //     ChangeColor(g,m,n,c,i0,j0+1);
+    //     ChangeColor(g,m,n,c,i0,j0-1);
+    // }
+    
+    if(i0==0 || j0==0 || m<1 || n<1) 
+    {
+        return;
+    }
+    char k = g[i0][j0];
+    int x[4] = {-1,0,1,0};
+    int y[4] = {0,1,0,-1};
+    for(int i=0;i<4;i++)
+    {
+        if(((i0+x[i] > 0 and i0+x[i] <= m) && (j0+y[i] > 0 and j0+y[i] <= n)) && g[i0+x[i]][j0+y[i]]==k)
+        {
+            ChangeColor(g,m,n,c,i0+x[i],j0+y[i]);
+        }
+        else 
+        {
+             g[i0][j0]=c; 
+        }
+    }
+}
+```
+
+### DC05PE26
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int GListLength(GList L) 
+{   // Add your code here
+  int GListLength = 0;
+  if (L) {
+    GListLength++;
+    GLNode* p = L->un.ptr.tp;
+    while (p) {
+      GListLength++;
+      p = p->un.ptr.tp;
+    }
+  }
+  return GListLength;
+}
+```
+
+### DC05PE30
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int GListDepth(GList ls) 
+{ // Add your code here
+    if (!ls) {
+        return 1;
+    }
+    else if (ls->tag == ATOM) {
+        return 0;
+    }
+    else {
+        int depth1,depth2;
+        depth1 = GListDepth(ls->un.ptr.hp) + 1;
+        depth2 = GListDepth(ls->un.ptr.tp);
+        return depth1 > depth2 ? depth1 : depth2;
+    }
+}
+```
+
+### DC05PE32
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+Status Equal(GList A, GList B) 
+{  // Add your code here
+    if (A != NULL && B != NULL) {
+        if (A->tag == LIST && B->tag == ATOM || A->tag == ATOM && B->tag == LIST) {
+            return FALSE;
+        }
+        else if (A->tag == LIST && B->tag == LIST) {
+            return (Equal(A->un.ptr.hp,B->un.ptr.hp) && Equal(A->un.ptr.tp,B->un.ptr.tp));
+        }
+        else if (A->tag == ATOM && B->tag == ATOM) {
+            if (A->un.atom == B->un.atom) {
+                return TRUE;
+            }
+            else {
+                return FALSE;
+            }
+        }
+    }
+    else {
+        if (A == NULL && B == NULL) {
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
+    }
+}
+```
+
+### DC05PE33
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void OutAtom(GList A, int layer, void(*Out2)(char, int)) 
+{ // Add your code here
+    if(!A)
+    {
+        return;
+    }
+    else
+    {
+        if(A->tag == ATOM)    
+        {
+            Out2(A->un.atom, layer);
+        }
+        else 
+        {
+            OutAtom(A->un.ptr.hp,layer+1,Out2);
+            OutAtom(A->un.ptr.tp,layer,Out2);  
+        }
+    }
+}
+```
+
 
 
 ## 未完待续...

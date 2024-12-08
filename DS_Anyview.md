@@ -1754,9 +1754,1408 @@ void OutAtom(GList A, int layer, void(*Out2)(char, int))
 }
 ```
 
+## 第6章
 
+### DC06PE01
 
+```c++
+#include "allinclude.h"
+int commonAncestor(SqBiTree T, int i, int j) 
+{  // Add your code here
+  if (i < 1 || j < 1 || i > T.lastIndex || j > T.lastIndex) {
+    return 0;
+  }
+  int tempParent_I = i/2;
+  while(tempParent_I)
+  {
+    int tempJ = j;
+    while(tempJ > tempParent_I)
+    {
+      tempJ /= 2;
+      if(tempJ == tempParent_I)
+      {
+        return tempParent_I;
+      }
+    }
+    tempParent_I /= 2;
+  }
+  return 0;
+}
+```
 
+### DC06PE02
+
+```c++
+#include "allinclude.h"
+Status is_Desendant(SqBiTree T, int u, int v)  
+{  // Add your code here
+    if (u < 1 || v < 1 || u > T.lastIndex || v > T.lastIndex) {
+        return FALSE;
+    }
+    while(v > u)
+    {
+        v /= 2;
+        if (v == u) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+```
+
+### DC06PE06
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+Status Similar(BiTree T1, BiTree T2) 
+{   // Add your code here
+    if(!T1 && !T2)
+    {
+        return TRUE;
+    }
+    else if(!T1 || !T2)
+    {
+        return FALSE;
+    }
+    else 
+    {
+        return Similar(T1->lchild,T2->lchild) && Similar(T1->rchild,T2->rchild);
+    }
+}
+```
+
+### DC06PE11
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+
+int getTreeNodeNum(BiTree T)
+{
+    return T ? (1+getTreeNodeNum(T->lchild)+getTreeNodeNum(T->rchild)):0;
+}
+
+TElemType PreOrderK(BiTree T, int k) 
+{   // Add your code here
+    if(!T || k < 1)
+    {
+        return '#';
+    }
+    int count = getTreeNodeNum(T->lchild);
+    if(k == 1)
+    {
+        return T->data;
+    }
+    return count >= k-1 ? PreOrderK(T->lchild,k-1): PreOrderK(T->rchild, k-1-count);
+}
+```
+
+### DC06PE12
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int Leaves(BiTree T) 
+{   // Add your code here
+    if(!T)
+    {
+        return 0;
+    }
+    if(!T->lchild && !T->rchild)
+    {
+        return 1;
+    }
+    return Leaves(T->lchild)+Leaves(T->rchild);
+}
+```
+
+### DC06PE21
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void PreOrder(BiTree T, Status (*visit)(TElemType))
+{   // Add your code here
+    if(!T)
+    {
+        return ;
+    }
+    Stack S;
+    InitStack(S);
+    BiTree p;
+    Push(S,T);
+    while(!StackEmpty(S))
+    {
+        Pop(S,p);
+        visit(p->data);
+        if(p->rchild != NULL)
+        {
+            Push(S,p->rchild);
+        }
+        if(p->lchild != NULL)
+        {
+            Push(S,p->lchild);
+        }
+    }
+}
+```
+
+### DC06PE23
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void printNoLessThanKey_InOrder(BiTree T, TElemType k) 
+{  // Add your code here
+    if(!T)
+    {
+        return;
+    }
+    printNoLessThanKey_InOrder(T->lchild,k);
+    if (T->data >= k) {
+        printKey(T->data);
+    }
+    printNoLessThanKey_InOrder(T->rchild,k);
+}
+```
+
+### DC06PE27
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void printNoLessThanKey_PreOrder(BiTree T, TElemType k) 
+{  // Add your code here
+    if(!T)
+    {
+        return;
+    }
+    if (T->data >= k) {
+        printKey(T->data);
+    }
+    printNoLessThanKey_PreOrder(T->lchild,k);
+    printNoLessThanKey_PreOrder(T->rchild,k);
+}
+```
+
+### DC06PE29
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void printNoLessThanKey_PostOrder(BiTree T, TElemType k) 
+{  // Add your code here
+    if(!T)
+    {
+        return;
+    }
+    printNoLessThanKey_PostOrder(T->lchild,k);
+    printNoLessThanKey_PostOrder(T->rchild,k);
+    if (T->data >= k) {
+        printKey(T->data);
+    }
+}
+```
+
+### DC06PE30
+
+```c++
+#include "allinclude.h"
+Status isIsomorphic(BiTree T1, BiTree T2)
+{// Add your code here
+    if (!T1 && !T2) {
+        return TRUE;
+    }
+    else if(!(T1 || T2)){
+        return FALSE;
+    }
+
+    if(T1->data != T2->data)
+    {
+        return FALSE;
+    }
+    if (!T1->lchild && !T2->lchild) {
+        return isIsomorphic(T1->rchild,T2->rchild);
+    }
+    if (!T1->rchild && !T2->rchild) {
+        return isIsomorphic(T1->lchild,T2->lchild);
+    }
+    if ((T1->lchild && T2->lchild) && (T1->lchild->data == T2->lchild->data)) {
+        return isIsomorphic(T1->lchild,T2->lchild) && isIsomorphic(T1->rchild, T2->rchild);
+    }
+    else {
+        return isIsomorphic(T1->lchild,T2->rchild) && isIsomorphic(T1->rchild, T2->lchild);
+    }
+    return TRUE;
+}
+```
+
+### DC06PE31
+
+```c++
+#include "allinclude.h"
+void PreOrder(BiTree bt, void (*visit)(TElemType)) 
+{  // Add your code here
+    if(!bt)
+    {
+        return ;
+    }
+    SqStack2 S;
+    InitStack_Sq2(S);
+    BiTree p;
+    Push_Sq2(S,bt);
+    while(!StackEmpty_Sq2(S))
+    {
+        Pop_Sq2(S,p);
+        visit(p->data);
+        if(p->rchild != NULL)
+        {
+            Push_Sq2(S,p->rchild);
+        }
+        if(p->lchild != NULL)
+        {
+            Push_Sq2(S,p->lchild);
+        }
+    }
+}
+```
+
+### DC06PE32
+
+```c++
+#include "allinclude.h"
+void PostOrder(BiTree bt, void (*visit)(TElemType))
+/* 使用栈，非递归后序遍历二叉树bt，    */
+/* 对每个结点的元素域data调用函数visit */
+{    // Add your code here
+    if(!bt)
+    {
+        return ;
+    }
+
+    SqStack2 S1;
+    InitStack_Sq2(S1);
+    SElemType se;
+    se.tag = 0;
+    se.ptr = bt;
+    BiTree p = bt;
+    Push_Sq2(S1,se);
+    while(!StackEmpty_Sq2(S1))
+    {
+        Pop_Sq2(S1,se);
+        p = se.ptr;
+        if(se.tag == 1)     //若已经过了一次
+        {
+            visit(se.ptr->data);
+        }
+        else {
+            se.tag = 1;
+            Push_Sq2(S1,se);
+            if(p->rchild)
+            {
+                se.ptr = p->rchild;
+                se.tag = 0; 
+                Push_Sq2(S1,se);
+            }
+            if(p->lchild)
+            {
+                se.ptr = p->lchild;
+                se.tag = 0;
+                Push_Sq2(S1,se);
+            }
+        }
+    }
+}
+```
+
+### DC06PE33
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void ExchangeSubTree(BiTree &T)
+{   // Add your code here
+    if (!T) {
+        return ;
+    }
+    BiTree temp = T->rchild;
+    T->rchild = T->lchild;
+    T->lchild = temp; 
+
+    ExchangeSubTree(T->lchild);
+    ExchangeSubTree(T->rchild);
+}
+```
+
+### DC06PE34
+
+```c++
+#include "allinclude.h"
+void PostOrder(TriTree bt, void (*visit)(TElemType))
+/* 不使用栈，非递归后序遍历二叉树bt，  */
+/* 对每个结点的元素域data调用函数visit */
+{  // Add your code here
+    if(!bt)
+    {
+        return ;
+    }
+    TriTree p = bt;
+    while(p)
+    {
+        if(p->mark == 0)
+        {
+            p->mark = 1;
+            if(p->lchild)
+            {
+                p = p->lchild;
+            }
+        }
+        else if (p->mark == 1) {
+            p->mark = 2;
+            if(p->rchild)
+            {
+                p = p->rchild;
+            }
+        }
+        else if (p->mark == 2) {
+            visit(p->data);
+            p = p->parent;
+        }
+    }
+}
+```
+
+### DC06PE35
+
+```c++
+#include "allinclude.h"
+void InOrder(TriTree PT, void (*visit)(TElemType))
+/* 不使用栈，非递归中序遍历二叉树bt，  */
+/* 对每个结点的元素域data调用函数visit */
+{  // Add your code here
+    if(!PT)
+    {
+        return ;
+    }
+    TriTree p = PT;
+    while(p)
+    {
+        if(p->mark == 0)
+        {
+            p->mark = 1;
+            if(p->lchild)
+            {
+                p = p->lchild;
+            }
+        }
+        else if (p->mark == 1) {
+            p->mark = 2;
+            visit(p->data);
+            if(p->rchild)
+            {
+                p = p->rchild;
+            }           
+        }
+        else if (p->mark == 2) {
+            p = p->parent;
+        }
+    }
+}
+```
+
+### DC06PE36
+
+```c++
+#include "allinclude.h"
+
+int getTreeHeight(BiTree T)
+{
+    if(T==NULL)
+    {
+        return 0;
+
+    }
+    
+    int count=1; 
+    
+    while(T->lchild!=NULL)  
+    {
+        count++;
+        T=T->lchild;
+    } 
+    
+    return count; 
+}
+
+BiTNode* getLastNode(BiTree T)
+/* 求完全二叉树的最后一层的最后一个结点 */
+{   // Add your code here
+    if(!T)
+    {
+        return NULL;
+    }
+
+    if(T->lchild == NULL)  
+    {
+        return T;
+    }
+    
+    if(getTreeHeight(T->lchild) > getTreeHeight(T->rchild) )
+    {
+        return getLastNode(T->lchild);
+    }
+    else  
+    {
+        return getLastNode(T->rchild);
+    }
+}
+
+```
+
+### DC06PE37
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+TElemType findParent(BiTree T, TElemType data, BiTNode* parent)
+{   //Add your code here
+    if (!T || T->data == data && !parent) {
+        return '\0';
+    }
+    if (T->lchild && T->lchild->data == data) {
+        return T->data;
+    }
+    if (T->rchild && T->rchild->data == data) {
+        return T->data;
+    }
+    return findParent(T->lchild,data,T)?findParent(T->lchild,data,T):findParent(T->rchild,data,T);
+}
+```
+
+### DC06PE40
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+Status isBrother(BiTree T, TElemType dx, TElemType dy)
+{    // Add your code here
+     if (!T) {
+          return FALSE;
+     }
+     if (T->lchild && T->rchild) {
+          if (T->lchild->data == dx && T->rchild->data == dy) {
+               return TRUE;
+          } 
+          else if (T->rchild->data == dx && T->lchild->data == dy) {
+               return TRUE;
+          }  
+     }
+     return isBrother(T->lchild,dx,dy) || isBrother(T->rchild,dx,dy);
+}
+```
+
+### DC06PE43
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void CopyBiTree(BiTree T, BiTree &TT)
+{   // Add your code here
+    if(!T)
+    {
+        return;
+    }
+    TT = (BiTree)malloc(sizeof(BiTNode));
+    TT->data = T->data;
+    TT->lchild = T->lchild;
+    TT->rchild = T->rchild;
+
+    CopyBiTree(T->lchild,TT->lchild);
+    CopyBiTree(T->rchild,TT->rchild);
+}
+```
+
+### DC06PE44
+
+```c++
+#include "allinclude.h"
+int Depthx(BiTree T, TElemType x)
+{  // Add your code here
+    if(!T)
+    {
+        return 0;
+    }
+
+    int deepth1,deepth2;  
+    if(T->data==x)  
+    {
+        
+        if(T->lchild==NULL)
+            deepth1=0;
+        else  
+        {
+            deepth1 = Depthx(T->lchild,T->lchild->data);
+        }
+        
+        if(T->rchild==NULL)
+            deepth2=0;
+        else
+        {
+            deepth2 = Depthx(T->rchild,T->rchild->data);
+        }
+        
+        return 1 + (deepth1>deepth2?deepth1:deepth2);
+    }
+    else
+    {
+        deepth1=Depthx(T->lchild,x);
+        deepth2=Depthx(T->rchild,x);
+        return  deepth1>deepth2?deepth1:deepth2;
+    }
+}
+```
+
+### DC06PE45
+
+```c++
+#include "allinclude.h"
+void ReleaseX(BiTree &bt, char x)
+{  // Add your code here
+    if(!bt)
+    {
+        return;
+    }
+    if(bt->data == x)
+    {
+        if (bt->lchild) {
+            ReleaseX(bt->lchild,bt->lchild->data);
+        }
+        if (bt->rchild) {
+            ReleaseX(bt->rchild,bt->rchild->data);     
+        }
+        // if(!bt->lchild && !bt->rchild)
+        // {
+        free(bt);
+        bt = NULL;
+        //}
+    }
+    else 
+    {
+        ReleaseX(bt->lchild,x);
+        ReleaseX(bt->rchild,x);  
+    }
+}
+
+```
+
+### DC06PE46
+
+```c++
+#include "allinclude.h"
+void CopyBiTree(BiTree T, BiTree &TT)
+{  // Add your code here
+    if(!T)
+        return;
+    TT=(BiTree)malloc(sizeof(BiTNode));
+    TT->data = T->data;
+    TT->lchild = TT->rchild = NULL;
+    LQueue Q_T,Q_TT;
+    BiTree temp=TT;
+
+    InitQueue_LQ(Q_T);
+    InitQueue_LQ(Q_TT);
+    EnQueue_LQ(Q_T,T);
+    EnQueue_LQ(Q_TT,temp);
+    
+    while(QueueEmpty_LQ(Q_T)!=TRUE)
+    {
+        DeQueue_LQ(Q_T,T);
+        DeQueue_LQ(Q_TT,temp);  
+        
+        if(T->lchild != NULL)
+        {
+            temp->lchild = (BiTree)malloc(sizeof(BiTNode));
+            temp->lchild->data = T->lchild->data;
+            temp->lchild->lchild = temp->lchild->rchild = NULL;
+            EnQueue_LQ(Q_T,T->lchild);
+            EnQueue_LQ(Q_TT,temp->lchild);
+        }
+        
+        if(T->rchild != NULL)
+        {
+            temp->rchild = (BiTree)malloc(sizeof(BiTNode));
+            temp->rchild->data = T->rchild->data;
+            temp->rchild->lchild = temp->rchild->rchild = NULL; 
+            EnQueue_LQ(Q_T,T->rchild);
+            EnQueue_LQ(Q_TT,temp->rchild);
+        }
+        
+    }
+}
+```
+
+### DC06PE47
+
+```c++
+#include "allinclude.h"
+void LevelOrder(BiTree bt, char *ss)
+{  // Add your code here
+    if(!bt)
+    {
+        return ;
+    }
+    char* ss_temp = ss;
+    BiTree temp = NULL;
+    LQueue Q1;
+    InitQueue_LQ(Q1);
+
+    *ss_temp++ = bt->data;
+    EnQueue_LQ(Q1,bt);
+
+    while (DeQueue_LQ(Q1,temp)) {
+        if(temp->lchild != NULL)
+        {
+            *ss_temp++ = temp->lchild->data;
+            EnQueue_LQ(Q1,temp->lchild);
+        }
+        if(temp->rchild != NULL)
+        {
+            *ss_temp++ = temp->rchild->data;
+            EnQueue_LQ(Q1,temp->rchild);            
+        }
+    }
+    *ss_temp = '\0';
+}
+```
+
+### DC06PE48
+
+```c++
+#include "allinclude.h"
+bool findPath(BiTree root, TElemType target, SqStack2& path);
+
+BiTree CommAncestor(BiTree root, TElemType c1, TElemType c2)
+{  // Add your code here
+   if(!root || root->data == c1 || root->data == c2)
+   {
+      return NULL;
+   }
+
+   BiTree parent = NULL;
+   SElemType temp;
+   temp.ptr = NULL;
+   SqStack2 S1,S2,Sq,Sp;
+   InitStack_Sq2(S1);
+   InitStack_Sq2(S2);
+   InitStack_Sq2(Sq);
+   InitStack_Sq2(Sp);
+
+   if(!findPath(root,c1,Sp) || !findPath(root,c2,Sq))
+      return NULL;
+
+   while (!StackEmpty_Sq2(Sp)) {
+      Pop_Sq2(Sp,temp);
+      Push_Sq2(S1,temp);
+   }
+
+   while (!StackEmpty_Sq2(Sq)) {
+      Pop_Sq2(Sq,temp);
+      Push_Sq2(S2,temp);
+   }
+
+   SElemType temp1,temp2;
+   temp1.ptr = temp2.ptr = NULL;
+   do{
+      parent = temp1.ptr;
+
+      GetTop_Sq2(S1,temp);
+      if(temp.ptr->data == c1) break;
+      GetTop_Sq2(S2,temp);
+      if(temp.ptr->data == c2) break;
+
+      Pop_Sq2(S1,temp1);
+      Pop_Sq2(S2,temp2);
+   }while(temp1.ptr == temp2.ptr);
+
+   return parent;
+}
+
+bool findPath(BiTree root, TElemType target, SqStack2& path)
+{
+   if (!root) {
+      return FALSE;
+   }
+   SElemType temp;
+   temp.ptr = root;
+   Push_Sq2(path,temp);
+   if(root->data == target)
+   {
+      return TRUE;
+   }
+   
+   if((root->lchild && findPath(root->lchild,target,path)) || (root->rchild && findPath(root->rchild,target,path)))
+   {
+      return true;
+   }
+
+   Pop_Sq2(path,temp);
+   return FALSE;
+}
+```
+
+### DC06PE49
+
+```c++
+#include "allinclude.h"
+Status CompleteBiTree(BiTree bt)
+{  // Add your code here
+    if(!bt)
+    {
+        return TRUE;
+    }
+
+    bool hasNullBefore = FALSE;
+    LQueue Q;
+    InitQueue_LQ(Q);
+    EnQueue_LQ(Q,bt);
+
+    while(DeQueue_LQ(Q,bt))
+    {
+        if(bt->lchild)
+        {
+            if(!hasNullBefore)
+            {
+                EnQueue_LQ(Q,bt->lchild);
+            }
+            else {
+                return FALSE;
+            }
+        }
+        else {
+            hasNullBefore = TRUE;
+        }
+        if(bt->rchild)
+        {
+            if(!hasNullBefore)
+            {
+                EnQueue_LQ(Q,bt->rchild);
+            }
+            else {
+                return FALSE;
+            }
+        }  
+        else {
+            hasNullBefore = TRUE;
+        }
+    }
+    return TRUE;
+}
+```
+
+### DC06PE50
+
+```c++
+#include "allinclude.h"
+Status  BTEqual(BiTree T1, BiTree T2)
+{  // Add your code here
+    if(!T1 && !T2)
+    {
+        return TRUE;
+    }
+    else if(!T1 || !T2){
+        return FALSE;
+    }
+
+    if(T1->data == T2->data && BTEqual(T1->lchild,T2->lchild) && BTEqual(T1->rchild,T2->rchild))
+    {
+        return TRUE;
+    }
+    else {
+        return FALSE;
+    }
+}
+```
+
+### DC06PE51
+
+```c++
+#include "allinclude.h"
+void Degree1(BiTree T,int &count)
+{  // Add your code here
+    if(!T)
+    {
+        return ;
+    }
+    else if(!T->lchild && !T->rchild)
+    {
+        return ;
+    }
+    else if(!T->lchild || !T->rchild)
+    {
+        count++;
+    }
+    Degree1(T->lchild,count);
+    Degree1(T->rchild,count);
+}
+```
+
+### DC06PE52
+
+```c++
+#include "allinclude.h"
+int BranchNodes(BiTree T)
+{  // Add your code here
+    if(!T)
+    {
+        return 0;
+    }
+
+    if(!T->lchild && !T->rchild)    //判断是否为叶子节点
+    {
+        return 0;
+    }
+
+    return 1 + BranchNodes(T->lchild) + BranchNodes(T->rchild);
+}
+```
+
+### DC06PE53
+
+```c++
+#include "allinclude.h"
+int LevelSum(BiTree T)
+{  // Add your code here
+    if(!T)
+    {
+        return 0;
+    }
+
+    int count = 0;
+    LQueue Q;
+    InitQueue_LQ(Q);
+    EnQueue_LQ(Q,T);
+
+    while (DeQueue_LQ(Q,T)) {
+        count++;
+        if(T->lchild)
+        {
+            EnQueue_LQ(Q,T->lchild);
+        }
+        if(T->rchild)
+        {
+            EnQueue_LQ(Q,T->rchild);
+        }
+    }
+    return count;
+}
+```
+
+### DC06PE54
+
+```c++
+#include "allinclude.h"
+void ChangeTree(BiTree &T)
+{  // Add your code here
+    if(!T)
+    {
+        return ;
+    }
+    if(!T->lchild && T->rchild) //如果T没有左孩子但有右孩子
+    {
+        T->lchild = T->rchild;
+        T->rchild = NULL;
+    }
+
+    ChangeTree(T->lchild);
+    ChangeTree(T->rchild);
+}
+```
+
+### DC06PE55
+
+```c++
+#include "allinclude.h"
+#include <queue>
+int Width(BiTree T)
+{  // Add your code here
+    if(!T) 
+    {
+        return 0;
+    }
+    
+    queue<BiTNode*>q;
+    q.push(T);
+    int width = 0, res = 0;
+    while(!q.empty()){
+        width = q.size();
+        if(width > res) res = width;
+        for(int i=0; i<width; i++){
+            BiTNode *node = q.front();
+            q.pop();
+            if(node->lchild) q.push(node->lchild);
+            if(node->rchild) q.push(node->rchild);
+        }
+    }
+    return res;
+}
+```
+
+### DC06PE56
+
+```c++
+#include "allinclude.h"
+Status SearchX(BiTree T, TElemType x)
+{  // Add your code here
+    if(!T)
+    {
+        return ERROR;
+    }
+
+    if(T->data == x)
+    {
+        return OK;
+    }
+    return SearchX(T->lchild,x) || SearchX(T->rchild,x);
+}
+```
+
+### DC06PE57
+
+```c++
+#include "allinclude.h"
+int NodeLevel(BiTree t, TElemType x)
+{  // Add your code here
+    if(!t)
+    {
+        return -1;
+    }
+
+    if(t->data == x)
+    {
+        return 1;
+    }
+
+    int level1,level2;
+    level1=NodeLevel(t->lchild,x);
+    level2=NodeLevel(t->rchild,x);
+    
+    if(level1!=-1 )
+        return (level1+1);
+    if(level2!=-1)  
+        return (level2+1);
+    
+    return -1; 
+}
+```
+
+### DC06PE58
+
+```c++
+#include "allinclude.h"
+int countTree(BiTree T)
+{
+    if(!T)
+    {
+        return 0;
+    }
+    return 1+countTree(T->lchild)+countTree(T->rchild);
+}
+int xSum(BiTree T, TElemType x)
+{  // Add your code here
+    if(!T)
+    {
+        return 0;
+    }
+
+    if(T->data == x)
+    {
+        return countTree(T);
+    }
+    
+    int count1,count2;
+    count1 = xSum(T->lchild,x);
+    count2 = xSum(T->rchild,x);
+
+    return count1>count2?count1:count2; 
+}
+```
+
+### DC06PE59
+
+```c++
+#include "allinclude.h"
+void xLevel(BiTree T,TElemType x, bool &found, int &xlev)
+{  // Add your code here
+    if(!T)
+    {
+        found = FALSE;
+        xlev = 0;
+        return;
+    }
+    if(T->data == x)
+    {
+        found = TRUE;
+        xlev++;
+    }
+    else {
+        xlev++;
+        int temp=xlev;                  //记录当前层次，用于后面回溯
+        xLevel(T->lchild,x,found,xlev);
+    
+        if(!found)
+        { 
+            xlev=temp;
+            xLevel(T->rchild,x,found,xlev); 
+        }  
+    }
+}
+```
+
+### DC06PE60
+
+```c++
+#include "allinclude.h"
+Status RegularBiTree(BiTree T)
+{  // Add your code here
+    if(!T)      //空树
+    {
+        return TRUE;
+    }
+
+    if(!(T->lchild && T->rchild || !T->lchild && !T->rchild))   //若度为1
+    {
+        return FALSE;
+    }
+
+    return RegularBiTree(T->lchild) && RegularBiTree(T->rchild);
+}
+
+```
+
+### DC06PE61
+
+```c++
+#include "allinclude.h"
+Status SmallBiTree(BiTree T)
+{  // Add your code here
+    if(!T)
+    {
+        return TRUE;
+    }
+
+    bool small1 = TRUE,small2 = TRUE;
+    if (T->lchild) {
+        if(T->data < T->lchild->data)
+        {
+            small1 = SmallBiTree(T->lchild);
+        }
+        else {
+            small1 = FALSE;
+        }
+    }
+    if (T->rchild) {
+        if(T->data < T->rchild->data)
+        {
+            small2 = SmallBiTree(T->lchild);
+        }
+        else {
+            small2 = FALSE;
+        }
+    }
+    return small1 && small2;
+}
+```
+
+### DC06PE62
+
+```c++
+#include "allinclude.h"
+#include <queue>
+int Width(BiTree T)
+{  // Add your code here
+    if(!T) 
+    {
+        return 0;
+    }
+    
+    queue<BiTNode*>q;
+    q.push(T);
+    int width = 0, res = 0;
+    while(!q.empty()){
+        width = q.size();
+        if(width > res) res = width;
+        for(int i=0; i<width; i++){
+            BiTNode *node = q.front();
+            q.pop();
+            if(node->lchild) q.push(node->lchild);
+            if(node->rchild) q.push(node->rchild);
+        }
+    }
+    return res;
+}
+```
+
+### DC06PE65
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+/*
+    way1
+*/
+
+// Status IsBSTree(BSTree T) 
+// {   // Add your code here
+//     if(!T)
+//     {
+//         return TRUE;
+//     }
+
+//     if(T->lchild)
+//     {
+//         if(T->data.key < T->lchild->data.key)
+//         {
+//             return FALSE;
+//         }
+//     }
+
+//     if(T->rchild)
+//     {
+//         if(T->data.key > T->rchild->data.key)
+//         {
+//             return FALSE;
+//         }
+//     }
+
+//     return IsBSTree(T->lchild) && IsBSTree(T->rchild);
+// }
+
+/*
+    way2
+*/
+
+Status IsBSTree(BSTree T) 
+{   // Add your code here
+    if(!T)
+    {
+        return TRUE;
+    }
+
+    bool flag1,flag2;
+    flag1 = flag2 = TRUE;
+
+    if(T->lchild)
+    {
+        if(T->data.key > T->lchild->data.key)
+        {
+            flag1 = IsBSTree(T->lchild);
+        }
+        else {
+            flag1 = FALSE;
+        }
+    }
+
+    if(T->rchild)
+    {
+        if(T->data.key < T->rchild->data.key)
+        {
+            flag2 = IsBSTree(T->rchild);
+        }
+        else {
+            flag2 = FALSE;
+        }
+    }
+
+    return flag1 && flag2;
+}
+```
+
+### DC06PE66
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void OrderOut(BSTree T, KeyType k, void(*visit)(TElemType))
+{   // Add your code here
+    if(!T)
+    {
+        return ;
+    }
+    
+    OrderOut(T->rchild,k,visit);
+
+    if(T->data.key >= k)
+    {
+        visit(T->data);
+    }
+
+    OrderOut(T->lchild,k,visit);
+}
+```
+
+### DC06PE67
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+Status InsertBST_I(BSTree &T, TElemType k) 
+{    // Add your code here
+    if(!T)
+    {
+        T = (BSTree)malloc(sizeof(BSTNode));
+        T->lchild = T->rchild = NULL;
+        T->data = k;
+        return TRUE;
+    }
+
+    BSTree temp = T;
+    while(temp)
+    {
+        //二叉搜索树，遵循左小右大原则，左子树节点值比根节点值小，右子树节点值比根节点值大
+        if(temp->data.key < k.key)
+        {
+            if(temp->rchild)
+            {
+                temp = temp->rchild;
+            }
+            else {
+                temp->rchild = (BSTree)malloc(sizeof(BSTNode));
+                temp->rchild->data = k;
+                temp->rchild->lchild = temp->rchild->rchild = NULL;
+                return TRUE;
+            }
+        }
+        else if(temp->data.key > k.key)
+        {
+            if(temp->lchild)
+            {
+                temp = temp->lchild;
+            }
+            else {
+                temp->lchild = (BSTree)malloc(sizeof(BSTNode));
+                temp->lchild->data = k;
+                temp->lchild->lchild = temp->lchild->rchild = NULL;
+                return TRUE;
+            }
+        }
+        else {      //已经有等于k的值，插入不进去
+            return FALSE;
+        }
+    }
+    return FALSE;
+}
+```
+
+### DC06PE68
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+
+bool findPath(BiTree T, TElemType target, Stack& path);
+
+BiTree CommAncestor(BiTree T, TElemType a, TElemType b) 
+{    // Add your code here
+   if(!T || T->data == a || T->data == b)
+   {
+      return NULL;
+   }
+
+   BiTree parent = NULL;
+   SElemType temp;
+   temp.ptr = NULL;
+   Stack S1,S2,Sq,Sp;
+   InitStack(S1);
+   InitStack(S2);
+   InitStack(Sq);
+   InitStack(Sp);
+
+    if(!findPath(T,a,Sp) || !findPath(T,b,Sq))      //若任意一个元素在树中不存在
+        return NULL;
+
+    while (!StackEmpty(Sp)) {
+        Pop(Sp,temp);
+        Push(S1,temp);
+    }
+
+    while (!StackEmpty(Sq)) {
+        Pop(Sq,temp);
+        Push(S2,temp);
+    }
+
+   SElemType temp1,temp2;
+   temp1.ptr = temp2.ptr = NULL;
+   do{
+      parent = temp1.ptr;
+
+      GetTop(S1,temp);
+      if(temp.ptr->data == a) break;
+      GetTop(S2,temp);
+      if(temp.ptr->data == b) break;
+
+      Pop(S1,temp1);
+      Pop(S2,temp2);
+   }while(temp1.ptr == temp2.ptr);
+
+   return parent;
+}
+
+bool findPath(BiTree T, TElemType target, Stack& path)
+{
+   if (!T) {
+      return FALSE;
+   }
+   SElemType temp;
+   temp.ptr = T;
+   Push(path,temp);
+   if(T->data == target)
+   {
+      return TRUE;
+   }
+   
+   if((T->lchild && findPath(T->lchild,target,path)) || (T->rchild && findPath(T->rchild,target,path)))
+   {
+      return true;
+   }
+
+   Pop(path,temp);
+   return FALSE;
+
+}
+```
+
+### DC06PE69
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+void treeToString(BiTree T, string &str);
+char* BiTree2String(BiTree T)
+{   // Add your code here
+    string str = "";
+    treeToString(T, str);
+    char *res = new char[str.size() + 1];
+    strcpy(res, str.c_str());
+    return res;
+}
+
+void treeToString(BiTree T, string &str) {
+    if (!T) {
+        str += "#";
+        return ;
+    }
+    str += T->data; 
+    if (T->lchild || T->rchild) {
+        str += '(';
+        treeToString(T->lchild, str);
+        str += ',';
+        treeToString(T->rchild, str);
+        str += ')';
+    }
+}
+```
+
+### DC06PE75
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+BSTNode *Ranking(BSTree T, int k) 
+{    // Add your code here
+    if(!T)                  //空树或者没找到
+        return NULL;
+    if(T->lsize == k)       //找到了第k小结点
+        return T;
+    else if (T->lsize < k)  //往右找
+        return Ranking(T->rchild,k-(T->lsize));
+    else                    //往左找
+        return Ranking(T->lchild,k);
+}
+```
 
 ## 第7章
 

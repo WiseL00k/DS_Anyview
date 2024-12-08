@@ -3472,6 +3472,10 @@ Status CreateUDG(ALGraph &G, VexType *vexs, int n,
 }
 ```
 
-## 未完待续...
+## 说明
+
+代码基本都是我手敲的，若有纰漏，还请见谅。
+
+也欢迎大家及时指正，更新题库。
 
 [By WiseL00k](https://github.com/WiseL00k)

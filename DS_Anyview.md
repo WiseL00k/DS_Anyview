@@ -1853,7 +1853,6 @@ int PCTreeDepth(PCTree T)
     }
     return depth + 1;
 }
-
 ```
 
 ### DC07PE26

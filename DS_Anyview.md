@@ -3288,7 +3288,189 @@ int find(MFSet S, int i)
 }
 ```
 
+## 第8章
 
+### DC08PE12
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+Status CreateDG(MGraph &G, VexType *vexs, int n,
+                           ArcInfo *arcs, int e) 
+{    // Add your code here
+    if(InitGraph(G,DG,n))
+    {
+        G.n = n;
+        G.e = e;
+        for (int i = 0; i < n; i++) {
+            G.vexs[i] = vexs[i];
+        }
+        for(int i = 0; i < MAX_VEX_NUM; i++)
+        {
+            for(int j = 0; j < MAX_VEX_NUM; j++)
+            {
+                G.arcs[i][j].adj = 0;
+            }
+        }
+        for(int i = 0; i < e; i++)
+        {
+            G.arcs[LocateVex(G,arcs[i].v)][LocateVex(G,arcs[i].w)].adj = 1;
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+```
+
+### DC08PE15
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int NextAdjVex(MGraph G, int k, int m) 
+{   // Add your code here
+    if(G.n == 0)
+    {
+        return -1;
+    }
+
+    if(k < 0 || k > G.n || G.e < 2) 
+    {
+        return -1;
+    }
+    for(int i=m+1; i<G.n; i++) {
+        if(G.kind == UDG || G.kind == DG && G.arcs[k][i].adj == 1 && i != k) 
+            return i;
+        // if(G.arcs[k][i].adj != INFINITY && i != k) 
+        //     return i;
+    }
+    return -1;
+}
+```
+
+### DC08PE17
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+Status SetArc(MGraph &G, VexType v, VexType w, ArcCell info) 
+{  // Add your code here
+    int k = LocateVex(G,v);
+    int m = LocateVex(G,w);
+    if (k < 0 || k >= G.n || m < 0 || m >= G.n)
+        return ERROR;   // k顶点或m顶点不存在
+    if(G.kind == UDG || G.kind == UDN)
+        G.arcs[k][m] = G.arcs[m][k] = info;
+    else
+        G.arcs[k][m] = info;
+    return OK;
+}
+```
+
+### DC08PE21
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int outDegree(ALGraph G, int k) 
+{  // Add your code here
+    if(k < 0 || k >= G.n)
+        return -1;
+    int out_degree = 0;
+    AdjVexNodeP p = G.vexs[k].firstArc;
+    while (p) {
+        p = p->next;
+        out_degree++;
+    }
+    return out_degree;
+}
+```
+
+### DC08PE32
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+Status CreateDG(ALGraph &G, VexType *vexs, int n,
+                            ArcInfo *arcs, int e) 
+{  // Add your code here
+    int i, j, k;
+    VexType v, w;
+    AdjVexNodeP p;
+    G.n = n;
+    G.e = e;
+    G.tags = (int *)malloc(sizeof(int) * n);
+    for (i = 0; i < n; ++i)
+    {
+        G.vexs[i].data = vexs[i];
+        G.vexs[i].firstArc = NULL;
+        G.tags[i] = UNVISITED;
+    }
+    for (k = 0; k < G.e; ++k)
+    {
+        v = arcs[k].v;
+        w = arcs[k].w;
+        i = LocateVex(G, v);
+        j = LocateVex(G, w);
+        if (i < 0 || j < 0) // v或w顶点不存在
+            return ERROR;
+        // 有向边创建,只需要创建一条
+        p = (AdjVexNodeP)malloc(sizeof(AdjVexNode));
+        if (p == NULL)
+            return ERROR;
+        p->info = 1;
+        p->adjvex = j;
+        p->next = G.vexs[i].firstArc;
+        G.vexs[i].firstArc = p;
+    }
+    return OK;
+}
+```
+
+### DC08PE34
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+Status CreateUDG(ALGraph &G, VexType *vexs, int n,
+                             ArcInfo *arcs, int e) 
+{  // Add your code here
+    int i, j, k;
+    VexType v, w;
+    AdjVexNodeP p;
+    G.n = n;
+    G.e = e;
+    G.tags = (int *)malloc(sizeof(int) * n);
+    for (i = 0; i < n; ++i)
+    {
+        G.vexs[i].data = vexs[i];
+        G.vexs[i].firstArc = NULL;
+        G.tags[i] = UNVISITED;
+    }
+    for (k = 0; k < G.e; ++k)
+    {
+        v = arcs[k].v;
+        w = arcs[k].w;
+        if (v == w) // 无向图无自环
+            continue;
+        i = LocateVex(G, v);
+        j = LocateVex(G, w);
+        if (i < 0 || j < 0) // v或w顶点不存在
+            return ERROR;
+        // 无向边创建,需要创建两条
+        p = (AdjVexNodeP)malloc(sizeof(AdjVexNode));
+        if (p == NULL)
+            return ERROR;
+        p->info = 1;
+        p->adjvex = j;
+        p->next = G.vexs[i].firstArc;
+        G.vexs[i].firstArc = p;
+
+        p = (AdjVexNodeP)malloc(sizeof(AdjVexNode));
+        if (p == NULL)
+            return ERROR;
+        p->info = 1;
+        p->adjvex = i;
+        p->next = G.vexs[j].firstArc;
+        G.vexs[j].firstArc = p;
+    }
+    return OK;
+}
+```
 
 ## 未完待续...
 

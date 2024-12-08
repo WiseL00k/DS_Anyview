@@ -1743,7 +1743,7 @@ void OutAtom(GList A, int layer, void(*Out2)(char, int))
     {
         if(A->tag == ATOM)    
         {
-            Out2(A->un.atom, layer);
+            Out2(A->uoon.atom, layer);
         }
         else 
         {
@@ -1756,7 +1756,142 @@ void OutAtom(GList A, int layer, void(*Out2)(char, int))
 
 
 
+
+
+## 第7章
+
+### DC07PE15
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int Leave(CSTree T) 
+{   // Add your code here
+    if(!T)
+    {
+        return 0;
+    }
+
+    if(!T->firstChild)  //该节点没有儿子,说明是叶子节点
+    {
+        return 1 + Leave(T->nextSibling);
+    }
+    return Leave(T->firstChild) + Leave(T->nextSibling);
+}
+```
+
+### DC07PE17
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int Degree(CSTree T) 
+{   // Add your code here
+    if(!T)
+    {
+        return 0;
+    }
+
+    int currentDegree = 0,childMaxDegree = 0;
+    CSTree temp = NULL;
+    if(T->firstChild)
+    {
+        currentDegree++;
+        temp = T->firstChild->nextSibling;
+    }
+    while(temp)
+    {
+        currentDegree++;
+        temp = temp->nextSibling;
+    }
+    childMaxDegree = Degree(T->firstChild) > Degree(T->nextSibling) ? Degree(T->firstChild):Degree(T->nextSibling);
+    return currentDegree > childMaxDegree ?currentDegree:childMaxDegree;
+}
+```
+
+### DC07PE22
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int PTreeDepth(PTree T) 
+{   // Add your code here
+    if(!T.nodes)
+        return 0;
+    int depth = 1;  //若只有一个结点，则深度为1
+    for(int i = T.nodeNum-1; i >= 0; --i)
+    {
+        int t = i,tempDepth = 1;
+        while(t != T.r)
+        {
+            tempDepth++;
+            t = T.nodes[t].parent;
+        }
+        depth = depth > tempDepth ? depth: tempDepth;
+    }
+    return depth;
+}
+```
+
+### DC07PE24
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int PCTreeDepth(PCTree T) 
+{    // Add your code here
+    if(T.n == 0) 
+    {
+        return 0;
+    }
+    int depth = 0, n = T.n;
+    PCTreeNode node;
+    while(n > 0){
+        int count = 0;
+        node = T.nodes[--n];
+        while(node.parent != -1){
+            count++;
+            node = T.nodes[node.parent];
+        }
+        if(count > depth) depth = count;
+    }
+    return depth + 1;
+}
+
+```
+
+### DC07PE26
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int TreeDepth(CSTree T)
+{   // Add your code here
+    if(!T)
+        return 0;
+    return 1+TreeDepth(T->firstChild)>TreeDepth(T->nextSibling)?1+TreeDepth(T->firstChild):TreeDepth(T->nextSibling);
+    // 一种比较简洁的写法
+}
+```
+
+### DC07PE63
+
+```c++
+#include "allinclude.h"  //DO NOT edit this line
+int find(MFSet S, int i) 
+{   // Add your code here
+    if (i < 0 || i >= S.n)
+        return ERROR;
+    int parent = i, temp = i;
+    while (S.parent[parent] >= 0)       //若还没到根结点
+        parent = S.parent[parent];
+    while (S.parent[i] >= 0 && i >= 0)  //对路径上经过的结点进行路径压缩
+    {
+        temp = S.parent[i];
+        S.parent[i] = parent;
+        i = temp;
+    }
+    return parent;
+}
+```
+
+
+
 ## 未完待续...
 
 [By WiseL00k](https://github.com/WiseL00k)
-
